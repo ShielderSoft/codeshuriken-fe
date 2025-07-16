@@ -295,4 +295,4 @@ export default function Scanning() {
       </Card>
     </div>
   );
-}
+} 

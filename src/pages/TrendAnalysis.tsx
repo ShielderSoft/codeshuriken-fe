@@ -503,4 +503,4 @@ export default function TrendAnalysis() {
       </Tabs>
     </div>
   );
-}
+} 
