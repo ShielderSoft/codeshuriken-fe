@@ -5,6 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 export default function Scanning() {
   const scanJobs = [
@@ -12,37 +13,68 @@ export default function Scanning() {
       id: "scan_001", 
       repository: "frontend-app", 
       status: "Completed", 
-      startTime: "2024-01-15 10:30", 
-      duration: "2m 45s",
-      vulnerabilities: 3,
-      type: "Full Scan"
+      scanDate: "2024-01-15", 
+      scanType: "Full Security Scan",
+      vulnerabilities: 3
     },
     { 
       id: "scan_002", 
       repository: "api-service", 
       status: "Running", 
-      startTime: "2024-01-15 11:15", 
-      duration: "1m 20s",
-      vulnerabilities: null,
-      type: "Incremental"
+      scanDate: "2024-01-15", 
+      scanType: "Incremental Scan",
+      vulnerabilities: 0
     },
     { 
       id: "scan_003", 
       repository: "auth-microservice", 
       status: "Pending", 
-      startTime: "Scheduled for 12:00", 
-      duration: null,
-      vulnerabilities: null,
-      type: "Full Scan"
+      scanDate: "2024-01-15", 
+      scanType: "Full Security Scan",
+      vulnerabilities: 0
     },
     { 
       id: "scan_004", 
       repository: "payment-gateway", 
       status: "Failed", 
-      startTime: "2024-01-15 09:45", 
-      duration: "Failed after 30s",
-      vulnerabilities: null,
-      type: "Full Scan"
+      scanDate: "2024-01-15", 
+      scanType: "SCA Analysis",
+      vulnerabilities: 0
+    }
+  ];
+
+  const scaAndSbomJobs = [
+    {
+      id: "sca_001",
+      repository: "frontend-app",
+      status: "Completed",
+      scanDate: "2024-01-15",
+      scanType: "SCA Analysis",
+      vulnerabilities: 12
+    },
+    {
+      id: "sbom_001",
+      repository: "api-service",
+      status: "Completed",
+      scanDate: "2024-01-14",
+      scanType: "SBOM Generation",
+      vulnerabilities: 0
+    },
+    {
+      id: "sca_002",
+      repository: "auth-microservice",
+      status: "Running",
+      scanDate: "2024-01-15",
+      scanType: "SCA Analysis",
+      vulnerabilities: 0
+    },
+    {
+      id: "sbom_002",
+      repository: "payment-gateway",
+      status: "Completed",
+      scanDate: "2024-01-14",
+      scanType: "SBOM Generation",
+      vulnerabilities: 0
     }
   ];
 
@@ -66,12 +98,78 @@ export default function Scanning() {
     }
   };
 
+  const renderScanItem = (job: any) => (
+    <div key={job.id} className="flex items-center justify-between p-4 border border-border rounded-lg">
+      <div className="flex items-center space-x-4">
+        {getStatusIcon(job.status)}
+        <div>
+          <div className="font-medium text-foreground">{job.repository}</div>
+          <div className="text-sm text-muted-foreground">{job.scanType}</div>
+        </div>
+      </div>
+
+      <div className="flex items-center space-x-4">
+        <div className="text-right text-sm">
+          <div className="text-muted-foreground">{job.scanDate}</div>
+        </div>
+
+        <Badge 
+          variant="outline" 
+          className={`text-${getStatusColor(job.status)} border-${getStatusColor(job.status)}`}
+        >
+          {job.status}
+        </Badge>
+
+        {job.vulnerabilities > 0 && (
+          <div className="text-sm font-medium text-foreground">
+            {job.vulnerabilities} issues
+          </div>
+        )}
+
+        <Button variant="ghost" size="sm">
+          View Details
+        </Button>
+      </div>
+    </div>
+  );
+
   return (
     <div className="space-y-6">
       {/* Page Header */}
       <div>
         <h1 className="text-3xl font-bold text-foreground">Security Scanning</h1>
         <p className="text-muted-foreground">Upload and scan repositories for security vulnerabilities</p>
+      </div>
+
+      {/* Scan Statistics */}
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <Card>
+          <CardContent className="p-6">
+            <div className="text-2xl font-bold text-foreground">24</div>
+            <div className="text-sm text-muted-foreground">Total Scans Today</div>
+          </CardContent>
+        </Card>
+        
+        <Card>
+          <CardContent className="p-6">
+            <div className="text-2xl font-bold text-foreground">18</div>
+            <div className="text-sm text-muted-foreground">Completed</div>
+          </CardContent>
+        </Card>
+        
+        <Card>
+          <CardContent className="p-6">
+            <div className="text-2xl font-bold text-foreground">3</div>
+            <div className="text-sm text-muted-foreground">In Progress</div>
+          </CardContent>
+        </Card>
+        
+        <Card>
+          <CardContent className="p-6">
+            <div className="text-2xl font-bold text-foreground">3</div>
+            <div className="text-sm text-muted-foreground">Failed</div>
+          </CardContent>
+        </Card>
       </div>
 
       {/* Upload and Scan Section */}
@@ -169,84 +267,32 @@ export default function Scanning() {
       {/* Recent Scan Jobs */}
       <Card>
         <CardHeader className="flex flex-row items-center justify-between">
-          <CardTitle className="text-lg font-semibold text-foreground">Recent Scan Jobs</CardTitle>
+          <CardTitle className="text-lg font-semibold text-foreground">Scan History</CardTitle>
           <Button variant="outline" size="sm">
             View All
           </Button>
         </CardHeader>
         <CardContent>
-          <div className="space-y-4">
-            {scanJobs.map((job) => (
-              <div key={job.id} className="flex items-center justify-between p-4 border border-border rounded-lg">
-                <div className="flex items-center space-x-4">
-                  {getStatusIcon(job.status)}
-                  <div>
-                    <div className="font-medium text-foreground">{job.repository}</div>
-                    <div className="text-sm text-muted-foreground">{job.type} • {job.id}</div>
-                  </div>
-                </div>
+          <Tabs defaultValue="recent" className="w-full">
+            <TabsList className="grid w-full grid-cols-2">
+              <TabsTrigger value="recent">Recent Scans</TabsTrigger>
+              <TabsTrigger value="sca-sbom">SCA & SBOM</TabsTrigger>
+            </TabsList>
 
-                <div className="flex items-center space-x-4">
-                  <Badge 
-                    variant="outline" 
-                    className={`text-${getStatusColor(job.status)} border-${getStatusColor(job.status)}`}
-                  >
-                    {job.status}
-                  </Badge>
-                  
-                  <div className="text-right text-sm">
-                    <div className="text-muted-foreground">{job.startTime}</div>
-                    {job.duration && (
-                      <div className="text-muted-foreground">{job.duration}</div>
-                    )}
-                  </div>
-
-                  {job.vulnerabilities !== null && (
-                    <div className="text-sm font-medium text-foreground">
-                      {job.vulnerabilities} issues
-                    </div>
-                  )}
-
-                  <Button variant="ghost" size="sm">
-                    View Details
-                  </Button>
-                </div>
+            <TabsContent value="recent" className="space-y-4 mt-6">
+              <div className="space-y-4">
+                {scanJobs.map(renderScanItem)}
               </div>
-            ))}
-          </div>
+            </TabsContent>
+
+            <TabsContent value="sca-sbom" className="space-y-4 mt-6">
+              <div className="space-y-4">
+                {scaAndSbomJobs.map(renderScanItem)}
+              </div>
+            </TabsContent>
+          </Tabs>
         </CardContent>
       </Card>
-
-      {/* Scan Statistics */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <Card>
-          <CardContent className="p-6">
-            <div className="text-2xl font-bold text-foreground">24</div>
-            <div className="text-sm text-muted-foreground">Total Scans Today</div>
-          </CardContent>
-        </Card>
-        
-        <Card>
-          <CardContent className="p-6">
-            <div className="text-2xl font-bold text-foreground">18</div>
-            <div className="text-sm text-muted-foreground">Completed</div>
-          </CardContent>
-        </Card>
-        
-        <Card>
-          <CardContent className="p-6">
-            <div className="text-2xl font-bold text-foreground">3</div>
-            <div className="text-sm text-muted-foreground">In Progress</div>
-          </CardContent>
-        </Card>
-        
-        <Card>
-          <CardContent className="p-6">
-            <div className="text-2xl font-bold text-foreground">3</div>
-            <div className="text-sm text-muted-foreground">Failed</div>
-          </CardContent>
-        </Card>
-      </div>
     </div>
   );
 }
