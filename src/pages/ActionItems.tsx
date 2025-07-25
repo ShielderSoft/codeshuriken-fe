@@ -166,6 +166,7 @@ export default function ActionItems() {
 
       {/* Summary Cards */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+<<<<<<< HEAD
         <Card>
           <CardContent className="p-6">
             <div className="text-2xl font-bold text-foreground">12</div>
@@ -191,6 +192,33 @@ export default function ActionItems() {
           <CardContent className="p-6">
             <div className="text-2xl font-bold text-foreground">8</div>
             <div className="text-sm text-muted-foreground">Resolved This Week</div>
+=======
+        <Card className="bg-gradient-to-br from-blue-50 to-blue-100 border-blue-200">
+          <CardContent className="p-6">
+            <div className="text-2xl font-bold text-blue-900">12</div>
+            <div className="text-sm text-blue-700">Open Items</div>
+          </CardContent>
+        </Card>
+        
+        <Card className="bg-gradient-to-br from-red-50 to-red-100 border-red-200">
+          <CardContent className="p-6">
+            <div className="text-2xl font-bold text-red-900">3</div>
+            <div className="text-sm text-red-700">Critical</div>
+          </CardContent>
+        </Card>
+        
+        <Card className="bg-gradient-to-br from-yellow-50 to-yellow-100 border-yellow-200">
+          <CardContent className="p-6">
+            <div className="text-2xl font-bold text-yellow-900">5</div>
+            <div className="text-sm text-yellow-700">In Progress</div>
+          </CardContent>
+        </Card>
+        
+        <Card className="bg-gradient-to-br from-green-50 to-green-100 border-green-200">
+          <CardContent className="p-6">
+            <div className="text-2xl font-bold text-green-900">8</div>
+            <div className="text-sm text-green-700">Resolved This Week</div>
+>>>>>>> 565ff9b (Initial commit)
           </CardContent>
         </Card>
       </div>
