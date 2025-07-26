@@ -2,11 +2,6 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-<<<<<<< HEAD
-import { MessageCircle, Users, Mail, MessageSquare, Send, Github, GitBranch, Bug, Settings } from "lucide-react";
-
-export default function Integrations() {
-=======
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -24,7 +19,6 @@ export default function Integrations() {
   const [monthlyReportStatus, setMonthlyReportStatus] = useState("enabled");
   const [scanAlertsStatus, setScanAlertsStatus] = useState("disabled");
 
->>>>>>> 565ff9b (Initial commit)
   const communicationTools = [
     { name: "Slack", icon: MessageCircle, connected: true, description: "Team messaging and notifications" },
     { name: "Microsoft Teams", icon: Users, connected: false, description: "Video calls and collaboration" },
@@ -39,8 +33,6 @@ export default function Integrations() {
     { name: "Jira", icon: Bug, connected: false, description: "Issue tracking and project management" }
   ];
 
-<<<<<<< HEAD
-=======
   const handleButtonClick = (tool: any) => {
     setSelectedTool(tool);
     if (tool.connected) {
@@ -50,7 +42,6 @@ export default function Integrations() {
     }
   };
 
->>>>>>> 565ff9b (Initial commit)
   const renderIntegrationCard = (tool: any) => (
     <div key={tool.name} className="border border-border rounded-lg p-4 hover:shadow-sm transition-shadow">
       <div className="flex items-center justify-between">
@@ -74,10 +65,7 @@ export default function Integrations() {
           <Button 
             variant={tool.connected ? "outline" : "default"}
             size="sm"
-<<<<<<< HEAD
-=======
             onClick={() => handleButtonClick(tool)}
->>>>>>> 565ff9b (Initial commit)
           >
             {tool.connected ? "Configure" : "Connect"}
           </Button>
@@ -86,8 +74,6 @@ export default function Integrations() {
     </div>
   );
 
-<<<<<<< HEAD
-=======
   // Configure Modal Component
   const ConfigureModal = () => (
     <Dialog open={isConfigureModalOpen} onOpenChange={setIsConfigureModalOpen}>
@@ -375,7 +361,6 @@ export default function Integrations() {
     </Dialog>
   );
 
->>>>>>> 565ff9b (Initial commit)
   return (
     <div className="space-y-6">
       {/* Page Header */}
@@ -446,20 +431,6 @@ export default function Integrations() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-4">
                   <h4 className="font-medium text-foreground">Alert Thresholds</h4>
-<<<<<<< HEAD
-                  <div className="space-y-3">
-                    <div className="flex items-center justify-between">
-                      <span className="text-sm text-muted-foreground">Critical Vulnerabilities</span>
-                      <Badge variant="outline" className="text-critical border-critical">Immediate</Badge>
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <span className="text-sm text-muted-foreground">High Severity Issues</span>
-                      <Badge variant="outline">Within 1 hour</Badge>
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <span className="text-sm text-muted-foreground">Medium/Low Issues</span>
-                      <Badge variant="outline">Daily digest</Badge>
-=======
                   <div className="space-y-4">
                     <div className="flex items-center justify-between p-3 bg-red-50 border border-red-200 rounded-lg">
                       <div className="flex items-center gap-3">
@@ -554,27 +525,12 @@ export default function Integrations() {
                           </SelectItem>
                         </SelectContent>
                       </Select>
->>>>>>> 565ff9b (Initial commit)
                     </div>
                   </div>
                 </div>
 
                 <div className="space-y-4">
                   <h4 className="font-medium text-foreground">Report Delivery</h4>
-<<<<<<< HEAD
-                  <div className="space-y-3">
-                    <div className="flex items-center justify-between">
-                      <span className="text-sm text-muted-foreground">Weekly Security Report</span>
-                      <Badge variant="outline" className="text-success border-success">Enabled</Badge>
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <span className="text-sm text-muted-foreground">Monthly SBOM Report</span>
-                      <Badge variant="outline" className="text-success border-success">Enabled</Badge>
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <span className="text-sm text-muted-foreground">Scan Completion Alerts</span>
-                      <Badge variant="outline">Disabled</Badge>
-=======
                   <div className="space-y-4">
                     <div className={`flex items-center justify-between p-3 rounded-lg border ${
                       weeklyReportStatus === 'enabled' 
@@ -653,7 +609,6 @@ export default function Integrations() {
                           <SelectItem value="disabled" className="text-red-600">Disabled</SelectItem>
                         </SelectContent>
                       </Select>
->>>>>>> 565ff9b (Initial commit)
                     </div>
                   </div>
                 </div>
@@ -662,13 +617,10 @@ export default function Integrations() {
           </Tabs>
         </CardContent>
       </Card>
-<<<<<<< HEAD
-=======
       
       {/* Modals */}
       <ConfigureModal />
       <ConnectModal />
->>>>>>> 565ff9b (Initial commit)
     </div>
   );
-} 
+}

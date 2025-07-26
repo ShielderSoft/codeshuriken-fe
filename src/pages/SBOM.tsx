@@ -95,33 +95,6 @@ export default function SBOM() {
 
       {/* Summary Cards */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-<<<<<<< HEAD
-        <Card>
-          <CardContent className="p-6">
-            <div className="text-2xl font-bold text-foreground">156</div>
-            <div className="text-sm text-muted-foreground">Total Components</div>
-          </CardContent>
-        </Card>
-        
-        <Card>
-          <CardContent className="p-6">
-            <div className="text-2xl font-bold text-foreground">23</div>
-            <div className="text-sm text-muted-foreground">Unique Licenses</div>
-          </CardContent>
-        </Card>
-        
-        <Card>
-          <CardContent className="p-6">
-            <div className="text-2xl font-bold text-foreground">8</div>
-            <div className="text-sm text-muted-foreground">High Risk</div>
-          </CardContent>
-        </Card>
-        
-        <Card>
-          <CardContent className="p-6">
-            <div className="text-2xl font-bold text-foreground">6</div>
-            <div className="text-sm text-muted-foreground">With Vulnerabilities</div>
-=======
         <Card className="bg-gradient-to-br from-blue-50 to-blue-100 border-blue-200">
           <CardContent className="p-6">
             <div className="text-2xl font-bold text-blue-900">156</div>
@@ -147,7 +120,6 @@ export default function SBOM() {
           <CardContent className="p-6">
             <div className="text-2xl font-bold text-orange-900">6</div>
             <div className="text-sm text-orange-700">With Vulnerabilities</div>
->>>>>>> 565ff9b (Initial commit)
           </CardContent>
         </Card>
       </div>

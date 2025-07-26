@@ -43,12 +43,6 @@ export default function TrendAnalysis() {
 
   // Weekly scan activity data
   const scanActivityData = [
-<<<<<<< HEAD
-    { week: "Week 1", scans: 45, vulnerabilities: 78 },
-    { week: "Week 2", scans: 52, vulnerabilities: 65 },
-    { week: "Week 3", scans: 48, vulnerabilities: 71 },
-    { week: "Week 4", scans: 58, vulnerabilities: 55 }
-=======
     { week: "Week 1", initiated: 45, running: 12, completed: 33 },
     { week: "Week 2", initiated: 52, running: 8, completed: 44 },
     { week: "Week 3", initiated: 48, running: 15, completed: 33 },
@@ -121,7 +115,6 @@ export default function TrendAnalysis() {
     { name: "frontend-app", totalScans: 42, vulnerabilities: 16, avgScanTime: "15m" },
     { name: "api-service", totalScans: 35, vulnerabilities: 14, avgScanTime: "10m" },
     { name: "notification-service", totalScans: 28, vulnerabilities: 12, avgScanTime: "6m" }
->>>>>>> 565ff9b (Initial commit)
   ];
 
   // Chart configurations
@@ -133,14 +126,9 @@ export default function TrendAnalysis() {
   };
 
   const activityChartConfig: ChartConfig = {
-<<<<<<< HEAD
-    scans: { label: "Scans", color: "#2563eb" },
-    vulnerabilities: { label: "Vulnerabilities", color: "#dc2626" }
-=======
     initiated: { label: "Initiated", color: "#2563eb" },
     running: { label: "Running", color: "#d97706" },
     completed: { label: "Completed", color: "#16a34a" }
->>>>>>> 565ff9b (Initial commit)
   };
 
   const severityData = [
@@ -159,27 +147,16 @@ export default function TrendAnalysis() {
   ];
 
   const getTrendIcon = (change: number) => {
-<<<<<<< HEAD
-    if (change > 0) return <TrendingUp className="h-4 w-4 text-critical" />;
-    if (change < 0) return <TrendingDown className="h-4 w-4 text-success" />;
-=======
     if (change > 0) return <TrendingUp className="h-4 w-4 text-red-600" />;
     if (change < 0) return <TrendingDown className="h-4 w-4 text-green-600" />;
->>>>>>> 565ff9b (Initial commit)
     return <div className="h-4 w-4" />;
   };
 
   const getTrendColor = (trend: string) => {
     switch (trend) {
-<<<<<<< HEAD
-      case "up": return "critical";
-      case "down": return "success";
-      default: return "muted";
-=======
       case "up": return "red-600";
       case "down": return "green-600";
       default: return "gray-600";
->>>>>>> 565ff9b (Initial commit)
     }
   };
 
@@ -212,203 +189,6 @@ export default function TrendAnalysis() {
         </TabsList>
 
         <TabsContent value="repo-view" className="space-y-6">
-<<<<<<< HEAD
-          {/* Vulnerability Trends Over Time */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-lg font-semibold text-foreground flex items-center gap-2">
-                <BarChart3 className="h-5 w-5" />
-                Vulnerability Trends Over Time
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <ChartContainer config={trendChartConfig} className="h-[300px]">
-                <ResponsiveContainer width="100%" height="100%">
-                  <AreaChart data={timeSeriesData}>
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="date" />
-                    <YAxis />
-                    <ChartTooltip content={<ChartTooltipContent />} />
-                    <Legend />
-                    <Area
-                      type="monotone"
-                      dataKey="critical"
-                      stackId="1"
-                      stroke="#dc2626"
-                      fill="#dc2626"
-                      fillOpacity={0.6}
-                    />
-                    <Area
-                      type="monotone"
-                      dataKey="high"
-                      stackId="1"
-                      stroke="#d97706"
-                      fill="#d97706"
-                      fillOpacity={0.6}
-                    />
-                    <Area
-                      type="monotone"
-                      dataKey="medium"
-                      stackId="1"
-                      stroke="#2563eb"
-                      fill="#2563eb"
-                      fillOpacity={0.6}
-                    />
-                    <Area
-                      type="monotone"
-                      dataKey="low"
-                      stackId="1"
-                      stroke="#16a34a"
-                      fill="#16a34a"
-                      fillOpacity={0.6}
-                    />
-                  </AreaChart>
-                </ResponsiveContainer>
-              </ChartContainer>
-            </CardContent>
-          </Card>
-
-          {/* Current Severity Distribution */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-lg font-semibold text-foreground">Severity Distribution</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <ChartContainer config={trendChartConfig} className="h-[250px]">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <PieChart>
-                      <Pie
-                        data={pieChartData}
-                        cx="50%"
-                        cy="50%"
-                        outerRadius={80}
-                        dataKey="value"
-                        label={({ name, value }) => `${name}: ${value}`}
-                      >
-                        {pieChartData.map((entry, index) => (
-                          <Cell key={`cell-${index}`} fill={entry.fill} />
-                        ))}
-                      </Pie>
-                      <ChartTooltip content={<ChartTooltipContent />} />
-                    </PieChart>
-                  </ResponsiveContainer>
-                </ChartContainer>
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-lg font-semibold text-foreground">Scan Activity</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <ChartContainer config={activityChartConfig} className="h-[250px]">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <LineChart data={scanActivityData}>
-                      <CartesianGrid strokeDasharray="3 3" />
-                      <XAxis dataKey="week" />
-                      <YAxis />
-                      <ChartTooltip content={<ChartTooltipContent />} />
-                      <Legend />
-                      <Line
-                        type="monotone"
-                        dataKey="scans"
-                        stroke="#2563eb"
-                        strokeWidth={3}
-                        dot={{ fill: "#2563eb", strokeWidth: 2 }}
-                      />
-                      <Line
-                        type="monotone"
-                        dataKey="vulnerabilities"
-                        stroke="#dc2626"
-                        strokeWidth={3}
-                        dot={{ fill: "#dc2626", strokeWidth: 2 }}
-                      />
-                    </LineChart>
-                  </ResponsiveContainer>
-                </ChartContainer>
-              </CardContent>
-            </Card>
-          </div>
-
-          {/* Repository Vulnerability Breakdown */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-lg font-semibold text-foreground">Repository Vulnerability Breakdown</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <ChartContainer config={trendChartConfig} className="h-[300px]">
-                <ResponsiveContainer width="100%" height="100%">
-                  <BarChart data={repoVulnData}>
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="name" />
-                    <YAxis />
-                    <ChartTooltip content={<ChartTooltipContent />} />
-                    <Legend />
-                    <Bar dataKey="critical" stackId="a" fill="#dc2626" />
-                    <Bar dataKey="high" stackId="a" fill="#d97706" />
-                    <Bar dataKey="medium" stackId="a" fill="#2563eb" />
-                    <Bar dataKey="low" stackId="a" fill="#16a34a" />
-                  </BarChart>
-                </ResponsiveContainer>
-              </ChartContainer>
-            </CardContent>
-          </Card>
-
-          {/* Vulnerability Trends Summary Cards */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-lg font-semibold text-foreground">Monthly Trends Summary</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-                {vulnerabilityTrends.map((trend) => (
-                  <div key={trend.type} className="p-4 border border-border rounded-lg">
-                    <div className="flex items-center justify-between mb-2">
-                      <span className="text-sm font-medium text-muted-foreground">{trend.type}</span>
-                      {getTrendIcon(trend.change)}
-                    </div>
-                    <div className="text-2xl font-bold text-foreground">{trend.current}</div>
-                    <div className="text-xs text-muted-foreground">
-                      {trend.change > 0 ? '+' : ''}{trend.change.toFixed(1)}% from last period
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Top Repositories by Vulnerabilities */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-lg font-semibold text-foreground">Most Vulnerable Repositories</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                {topRepositories.map((repo, index) => (
-                  <div key={repo.name} className="flex items-center justify-between p-3 border border-border rounded-lg">
-                    <div className="flex items-center space-x-4">
-                      <div className="w-8 h-8 bg-muted rounded-full flex items-center justify-center text-sm font-medium text-muted-foreground">
-                        {index + 1}
-                      </div>
-                      <div>
-                        <div className="font-medium text-foreground">{repo.name}</div>
-                        <div className="text-sm text-muted-foreground">{repo.vulnerabilities} total vulnerabilities</div>
-                      </div>
-                    </div>
-                    
-                    <Badge 
-                      variant="outline" 
-                      className={`text-${getTrendColor(repo.trend)} border-${getTrendColor(repo.trend)}`}
-                    >
-                      {repo.trend}
-                    </Badge>
-                  </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-=======
           {/* Main Split Layout */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             {/* Left Side - Charts */}
@@ -667,51 +447,11 @@ export default function TrendAnalysis() {
               </Card>
             </div>
           </div>
->>>>>>> 565ff9b (Initial commit)
         </TabsContent>
 
         <TabsContent value="org-view" className="space-y-6">
           {/* Organization Overview */}
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-<<<<<<< HEAD
-            <Card>
-              <CardContent className="p-6">
-                <div className="flex items-center space-x-2">
-                  <Shield className="h-4 w-4 text-muted-foreground" />
-                  <span className="text-sm text-muted-foreground">Total Repos</span>
-                </div>
-                <div className="text-2xl font-bold text-foreground">23</div>
-              </CardContent>
-            </Card>
-            
-            <Card>
-              <CardContent className="p-6">
-                <div className="flex items-center space-x-2">
-                  <AlertTriangle className="h-4 w-4 text-critical" />
-                  <span className="text-sm text-muted-foreground">At Risk</span>
-                </div>
-                <div className="text-2xl font-bold text-foreground">8</div>
-              </CardContent>
-            </Card>
-            
-            <Card>
-              <CardContent className="p-6">
-                <div className="flex items-center space-x-2">
-                  <TrendingUp className="h-4 w-4 text-warning" />
-                  <span className="text-sm text-muted-foreground">Avg Score</span>
-                </div>
-                <div className="text-2xl font-bold text-foreground">7.2</div>
-              </CardContent>
-            </Card>
-            
-            <Card>
-              <CardContent className="p-6">
-                <div className="flex items-center space-x-2">
-                  <Shield className="h-4 w-4 text-success" />
-                  <span className="text-sm text-muted-foreground">Compliant</span>
-                </div>
-                <div className="text-2xl font-bold text-foreground">15</div>
-=======
             <Card className="bg-gradient-to-br from-blue-50 to-blue-100 border-blue-200">
               <CardContent className="p-6">
                 <div className="flex items-center space-x-2">
@@ -749,151 +489,10 @@ export default function TrendAnalysis() {
                   <span className="text-sm text-green-700">Compliant</span>
                 </div>
                 <div className="text-2xl font-bold text-green-900">15</div>
->>>>>>> 565ff9b (Initial commit)
               </CardContent>
             </Card>
           </div>
 
-<<<<<<< HEAD
-          {/* Organization Trend Charts */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-lg font-semibold text-foreground">Monthly Security Score</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <ChartContainer config={activityChartConfig} className="h-[250px]">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <LineChart data={[
-                      { month: "Jan", score: 6.8 },
-                      { month: "Feb", score: 7.1 },
-                      { month: "Mar", score: 7.3 },
-                      { month: "Apr", score: 7.0 },
-                      { month: "May", score: 7.2 },
-                      { month: "Jun", score: 7.2 }
-                    ]}>
-                      <CartesianGrid strokeDasharray="3 3" />
-                      <XAxis dataKey="month" />
-                      <YAxis domain={[5, 10]} />
-                      <ChartTooltip content={<ChartTooltipContent />} />
-                      <Line
-                        type="monotone"
-                        dataKey="score"
-                        stroke="#2563eb"
-                        strokeWidth={3}
-                        dot={{ fill: "#2563eb", strokeWidth: 2, r: 6 }}
-                      />
-                    </LineChart>
-                  </ResponsiveContainer>
-                </ChartContainer>
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-lg font-semibold text-foreground">Compliance Rate</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <ChartContainer config={trendChartConfig} className="h-[250px]">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <BarChart data={[
-                      { team: "Frontend", compliant: 85, nonCompliant: 15 },
-                      { team: "Backend", compliant: 70, nonCompliant: 30 },
-                      { team: "DevOps", compliant: 95, nonCompliant: 5 },
-                      { team: "Mobile", compliant: 78, nonCompliant: 22 }
-                    ]}>
-                      <CartesianGrid strokeDasharray="3 3" />
-                      <XAxis dataKey="team" />
-                      <YAxis />
-                      <ChartTooltip content={<ChartTooltipContent />} />
-                      <Legend />
-                      <Bar dataKey="compliant" stackId="a" fill="#16a34a" />
-                      <Bar dataKey="nonCompliant" stackId="a" fill="#dc2626" />
-                    </BarChart>
-                  </ResponsiveContainer>
-                </ChartContainer>
-              </CardContent>
-            </Card>
-          </div>
-
-          {/* Team Performance */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-lg font-semibold text-foreground">Team Security Performance</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                  <div className="p-4 border border-border rounded-lg">
-                    <div className="text-lg font-semibold text-foreground">Frontend Team</div>
-                    <div className="text-sm text-muted-foreground">3 repositories</div>
-                    <div className="mt-2 flex items-center space-x-2">
-                      <div className="w-full bg-muted rounded-full h-2">
-                        <div className="bg-success h-2 rounded-full w-3/4" />
-                      </div>
-                      <span className="text-sm font-medium text-success">Good</span>
-                    </div>
-                  </div>
-                  
-                  <div className="p-4 border border-border rounded-lg">
-                    <div className="text-lg font-semibold text-foreground">Backend Team</div>
-                    <div className="text-sm text-muted-foreground">8 repositories</div>
-                    <div className="mt-2 flex items-center space-x-2">
-                      <div className="w-full bg-muted rounded-full h-2">
-                        <div className="bg-warning h-2 rounded-full w-1/2" />
-                      </div>
-                      <span className="text-sm font-medium text-warning">Needs Attention</span>
-                    </div>
-                  </div>
-                  
-                  <div className="p-4 border border-border rounded-lg">
-                    <div className="text-lg font-semibold text-foreground">DevOps Team</div>
-                    <div className="text-sm text-muted-foreground">5 repositories</div>
-                    <div className="mt-2 flex items-center space-x-2">
-                      <div className="w-full bg-muted rounded-full h-2">
-                        <div className="bg-success h-2 rounded-full w-5/6" />
-                      </div>
-                      <span className="text-sm font-medium text-success">Excellent</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Risk Assessment Heatmap */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-lg font-semibold text-foreground">Risk Assessment by Repository Type</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <ChartContainer config={trendChartConfig} className="h-[300px]">
-                <ResponsiveContainer width="100%" height="100%">
-                  <BarChart
-                    data={[
-                      { type: "Web Apps", critical: 8, high: 15, medium: 25, low: 30 },
-                      { type: "APIs", critical: 12, high: 20, medium: 18, low: 25 },
-                      { type: "Microservices", critical: 5, high: 12, medium: 22, low: 35 },
-                      { type: "Mobile", critical: 3, high: 8, medium: 15, low: 20 },
-                      { type: "Infrastructure", critical: 2, high: 5, medium: 10, low: 15 }
-                    ]}
-                    layout="horizontal"
-                  >
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis type="number" />
-                    <YAxis dataKey="type" type="category" width={100} />
-                    <ChartTooltip content={<ChartTooltipContent />} />
-                    <Legend />
-                    <Bar dataKey="critical" stackId="a" fill="#dc2626" />
-                    <Bar dataKey="high" stackId="a" fill="#d97706" />
-                    <Bar dataKey="medium" stackId="a" fill="#2563eb" />
-                    <Bar dataKey="low" stackId="a" fill="#16a34a" />
-                  </BarChart>
-                </ResponsiveContainer>
-              </ChartContainer>
-            </CardContent>
-          </Card>
-=======
           {/* Main Split Layout for Organization */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             {/* Left Side - Charts */}
@@ -1162,9 +761,8 @@ export default function TrendAnalysis() {
               </Card>
             </div>
           </div>
->>>>>>> 565ff9b (Initial commit)
         </TabsContent>
       </Tabs>
     </div>
   );
-} 
+}

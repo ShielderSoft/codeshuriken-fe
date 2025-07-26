@@ -14,64 +14,44 @@ export default function Scanning() {
       repository: "frontend-app", 
       status: "Completed", 
       scanDate: "2024-01-15", 
-<<<<<<< HEAD
-      scanType: "Full Security Scan",
-      vulnerabilities: 3
-=======
       scanEndTime: "14:32",
       scanType: "Full Security Scan",
       vulnerabilities: 3,
       languages: ["JavaScript", "TypeScript", "CSS"],
       filesScanned: 247
->>>>>>> 565ff9b (Initial commit)
     },
     { 
       id: "scan_002", 
       repository: "api-service", 
       status: "Running", 
       scanDate: "2024-01-15", 
-<<<<<<< HEAD
-      scanType: "Incremental Scan",
-      vulnerabilities: 0
-=======
       scanEndTime: "15:45",
       scanType: "Incremental Scan",
       vulnerabilities: 0,
       languages: ["Python", "YAML"],
       filesScanned: 89
->>>>>>> 565ff9b (Initial commit)
     },
     { 
       id: "scan_003", 
       repository: "auth-microservice", 
       status: "Pending", 
       scanDate: "2024-01-15", 
-<<<<<<< HEAD
-      scanType: "Full Security Scan",
-      vulnerabilities: 0
-=======
       scanEndTime: "16:20",
       scanType: "Full Security Scan",
       vulnerabilities: 0,
       languages: ["Java", "XML"],
       filesScanned: 156
->>>>>>> 565ff9b (Initial commit)
     },
     { 
       id: "scan_004", 
       repository: "payment-gateway", 
       status: "Failed", 
       scanDate: "2024-01-15", 
-<<<<<<< HEAD
-      scanType: "SCA Analysis",
-      vulnerabilities: 0
-=======
       scanEndTime: "13:15",
       scanType: "SCA Analysis",
       vulnerabilities: 0,
       languages: ["Go", "JSON"],
       filesScanned: 73
->>>>>>> 565ff9b (Initial commit)
     }
   ];
 
@@ -81,64 +61,44 @@ export default function Scanning() {
       repository: "frontend-app",
       status: "Completed",
       scanDate: "2024-01-15",
-<<<<<<< HEAD
-      scanType: "SCA Analysis",
-      vulnerabilities: 12
-=======
       scanEndTime: "12:45",
       scanType: "SCA Analysis",
       vulnerabilities: 12,
       languages: ["JavaScript", "TypeScript"],
       filesScanned: 198
->>>>>>> 565ff9b (Initial commit)
     },
     {
       id: "sbom_001",
       repository: "api-service",
       status: "Completed",
       scanDate: "2024-01-14",
-<<<<<<< HEAD
-      scanType: "SBOM Generation",
-      vulnerabilities: 0
-=======
       scanEndTime: "16:30",
       scanType: "SBOM Generation",
       vulnerabilities: 0,
       languages: ["Python", "YAML", "Docker"],
       filesScanned: 67
->>>>>>> 565ff9b (Initial commit)
     },
     {
       id: "sca_002",
       repository: "auth-microservice",
       status: "Running",
       scanDate: "2024-01-15",
-<<<<<<< HEAD
-      scanType: "SCA Analysis",
-      vulnerabilities: 0
-=======
       scanEndTime: "14:10",
       scanType: "SCA Analysis",
       vulnerabilities: 0,
       languages: ["Java", "XML", "Properties"],
       filesScanned: 134
->>>>>>> 565ff9b (Initial commit)
     },
     {
       id: "sbom_002",
       repository: "payment-gateway",
       status: "Completed",
       scanDate: "2024-01-14",
-<<<<<<< HEAD
-      scanType: "SBOM Generation",
-      vulnerabilities: 0
-=======
       scanEndTime: "11:25",
       scanType: "SBOM Generation",
       vulnerabilities: 0,
       languages: ["Go", "JSON", "YAML"],
       filesScanned: 82
->>>>>>> 565ff9b (Initial commit)
     }
   ];
 
@@ -163,14 +123,6 @@ export default function Scanning() {
   };
 
   const renderScanItem = (job: any) => (
-<<<<<<< HEAD
-    <div key={job.id} className="flex items-center justify-between p-4 border border-border rounded-lg">
-      <div className="flex items-center space-x-4">
-        {getStatusIcon(job.status)}
-        <div>
-          <div className="font-medium text-foreground">{job.repository}</div>
-          <div className="text-sm text-muted-foreground">{job.scanType}</div>
-=======
     <div key={job.id} className="flex items-center justify-between p-4 border border-border rounded-lg bg-white shadow-sm hover:shadow-md transition-shadow">
       <div className="flex items-center space-x-4">
         {getStatusIcon(job.status)}
@@ -186,14 +138,10 @@ export default function Scanning() {
               <span className="text-purple-600 font-medium">{job.scanType}</span>
             </div>
           </div>
->>>>>>> 565ff9b (Initial commit)
         </div>
       </div>
 
       <div className="flex items-center space-x-4">
-<<<<<<< HEAD
-        <div className="text-right text-sm">
-=======
         {job.vulnerabilities > 0 && (
           <div className="flex flex-col items-center justify-center bg-red-50 border border-red-200 rounded-lg p-3 min-w-[100px]">
             <div className="text-lg font-bold text-red-700">{job.vulnerabilities}</div>
@@ -203,15 +151,11 @@ export default function Scanning() {
         
         <div className="text-right text-sm">
           <div className="font-medium text-foreground">{job.scanEndTime}</div>
->>>>>>> 565ff9b (Initial commit)
           <div className="text-muted-foreground">{job.scanDate}</div>
         </div>
 
         <Badge 
           variant="outline" 
-<<<<<<< HEAD
-          className={`text-${getStatusColor(job.status)} border-${getStatusColor(job.status)}`}
-=======
           className={`font-medium ${
             job.status === 'Completed' ? 'text-green-700 border-green-600 bg-green-50' :
             job.status === 'Running' ? 'text-blue-700 border-blue-600 bg-blue-50' :
@@ -219,28 +163,16 @@ export default function Scanning() {
             job.status === 'Failed' ? 'text-red-700 border-red-600 bg-red-50' :
             'text-slate-700 border-slate-600 bg-slate-50'
           }`}
->>>>>>> 565ff9b (Initial commit)
         >
           {job.status}
         </Badge>
 
-<<<<<<< HEAD
-        {job.vulnerabilities > 0 && (
-          <div className="text-sm font-medium text-foreground">
-            {job.vulnerabilities} issues
-          </div>
-        )}
-
-        <Button variant="ghost" size="sm">
-          View Details
-=======
         <Button 
           variant="outline" 
           size="sm" 
           className="text-muted-foreground hover:bg-muted hover:text-foreground border-border font-medium px-3"
         >
           ⋯
->>>>>>> 565ff9b (Initial commit)
         </Button>
       </div>
     </div>
@@ -256,33 +188,6 @@ export default function Scanning() {
 
       {/* Scan Statistics */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-<<<<<<< HEAD
-        <Card>
-          <CardContent className="p-6">
-            <div className="text-2xl font-bold text-foreground">24</div>
-            <div className="text-sm text-muted-foreground">Total Scans Today</div>
-          </CardContent>
-        </Card>
-        
-        <Card>
-          <CardContent className="p-6">
-            <div className="text-2xl font-bold text-foreground">18</div>
-            <div className="text-sm text-muted-foreground">Completed</div>
-          </CardContent>
-        </Card>
-        
-        <Card>
-          <CardContent className="p-6">
-            <div className="text-2xl font-bold text-foreground">3</div>
-            <div className="text-sm text-muted-foreground">In Progress</div>
-          </CardContent>
-        </Card>
-        
-        <Card>
-          <CardContent className="p-6">
-            <div className="text-2xl font-bold text-foreground">3</div>
-            <div className="text-sm text-muted-foreground">Failed</div>
-=======
         <Card className="bg-gradient-to-br from-blue-50 to-blue-100 border-blue-200">
           <CardContent className="p-6">
             <div className="text-2xl font-bold text-blue-900">24</div>
@@ -308,7 +213,6 @@ export default function Scanning() {
           <CardContent className="p-6">
             <div className="text-2xl font-bold text-red-900">3</div>
             <div className="text-sm text-red-700">Failed</div>
->>>>>>> 565ff9b (Initial commit)
           </CardContent>
         </Card>
       </div>
@@ -436,4 +340,4 @@ export default function Scanning() {
       </Card>
     </div>
   );
-} 
+}

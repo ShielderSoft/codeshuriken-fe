@@ -1,8 +1,4 @@
-<<<<<<< HEAD
-import { FileText, Download, Calendar, Plus, Filter } from "lucide-react";
-=======
 import { FileText, Download, Calendar, Plus, Filter, X } from "lucide-react";
->>>>>>> 565ff9b (Initial commit)
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -11,10 +7,6 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Checkbox } from "@/components/ui/checkbox";
-<<<<<<< HEAD
-
-export default function Reports() {
-=======
 import { useState } from "react";
 
 export default function Reports() {
@@ -23,7 +15,6 @@ export default function Reports() {
   const [selectedType, setSelectedType] = useState<string>("");
   const [selectedStatus, setSelectedStatus] = useState<string>("");
 
->>>>>>> 565ff9b (Initial commit)
   const reports = [
     {
       id: "RPT_001",
@@ -72,8 +63,6 @@ export default function Reports() {
     }
   };
 
-<<<<<<< HEAD
-=======
   const addFilter = (filterType: string, value: string) => {
     const filterTag = `${filterType}:${value}`;
     if (!activeFilters.includes(filterTag)) {
@@ -110,7 +99,6 @@ export default function Reports() {
     });
   });
 
->>>>>>> 565ff9b (Initial commit)
   return (
     <div className="space-y-6">
       {/* Page Header */}
@@ -121,12 +109,6 @@ export default function Reports() {
         </div>
         
         <div className="flex space-x-3">
-<<<<<<< HEAD
-          <Button variant="outline">
-            <Filter className="h-4 w-4 mr-2" />
-            Filter
-          </Button>
-=======
           <Dialog>
             <DialogTrigger asChild>
               <Button variant="outline">
@@ -197,7 +179,6 @@ export default function Reports() {
               </div>
             </DialogContent>
           </Dialog>
->>>>>>> 565ff9b (Initial commit)
           
           <Dialog>
             <DialogTrigger asChild>
@@ -223,19 +204,12 @@ export default function Reports() {
                       <SelectValue placeholder="Select report type" />
                     </SelectTrigger>
                     <SelectContent>
-<<<<<<< HEAD
-                      <SelectItem value="security-summary">Security Summary</SelectItem>
-                      <SelectItem value="vulnerability-details">Vulnerability Details</SelectItem>
-                      <SelectItem value="sbom">SBOM Report</SelectItem>
-                      <SelectItem value="compliance">Compliance Report</SelectItem>
-=======
                       <SelectItem value="security-summary">Weekly Security Summary</SelectItem>
                       <SelectItem value="vulnerability-trends">Monthly Vulnerability Trends</SelectItem>
                       <SelectItem value="compliance-status">Compliance Status Report</SelectItem>
                       <SelectItem value="sbom-updates">SBOM Updates Report</SelectItem>
                       <SelectItem value="scan-activity">Scanning Activity Summary</SelectItem>
                       <SelectItem value="risk-assessment">Risk Assessment Report</SelectItem>
->>>>>>> 565ff9b (Initial commit)
                     </SelectContent>
                   </Select>
                 </div>
@@ -297,8 +271,6 @@ export default function Reports() {
         </div>
       </div>
 
-<<<<<<< HEAD
-=======
       {/* Active Filters */}
       {activeFilters.length > 0 && (
         <Card>
@@ -342,7 +314,6 @@ export default function Reports() {
         </Card>
       )}
 
->>>>>>> 565ff9b (Initial commit)
       {/* Quick Actions */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <Card className="cursor-pointer hover:bg-accent/50 transition-colors">
@@ -376,13 +347,6 @@ export default function Reports() {
       {/* Reports List */}
       <Card>
         <CardHeader>
-<<<<<<< HEAD
-          <CardTitle className="text-lg font-semibold text-foreground">All Reports</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-4">
-            {reports.map((report) => (
-=======
           <CardTitle className="text-lg font-semibold text-foreground">
             All Reports {activeFilters.length > 0 && `(${filteredReports.length} of ${reports.length})`}
           </CardTitle>
@@ -403,7 +367,6 @@ export default function Reports() {
           ) : (
             <div className="space-y-4">
               {filteredReports.map((report) => (
->>>>>>> 565ff9b (Initial commit)
               <div key={report.id} className="flex items-center justify-between p-4 border border-border rounded-lg">
                 <div className="flex items-center space-x-4">
                   <FileText className="h-5 w-5 text-muted-foreground" />
@@ -440,78 +403,9 @@ export default function Reports() {
                   </div>
                 </div>
               </div>
-<<<<<<< HEAD
-            ))}
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Export Options */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-lg font-semibold text-foreground">Export Options</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="space-y-4">
-              <h4 className="font-medium text-foreground">Available Formats</h4>
-              <div className="space-y-3">
-                <div className="flex items-center justify-between p-3 border border-border rounded-lg">
-                  <div className="flex items-center space-x-3">
-                    <FileText className="h-4 w-4 text-muted-foreground" />
-                    <span className="text-sm text-foreground">PDF Report</span>
-                  </div>
-                  <Badge variant="outline" className="text-success border-success">Available</Badge>
-                </div>
-                
-                <div className="flex items-center justify-between p-3 border border-border rounded-lg">
-                  <div className="flex items-center space-x-3">
-                    <FileText className="h-4 w-4 text-muted-foreground" />
-                    <span className="text-sm text-foreground">Excel Spreadsheet</span>
-                  </div>
-                  <Badge variant="outline" className="text-success border-success">Available</Badge>
-                </div>
-                
-                <div className="flex items-center justify-between p-3 border border-border rounded-lg">
-                  <div className="flex items-center space-x-3">
-                    <FileText className="h-4 w-4 text-muted-foreground" />
-                    <span className="text-sm text-foreground">CSV Data</span>
-                  </div>
-                  <Badge variant="outline" className="text-success border-success">Available</Badge>
-                </div>
-              </div>
-            </div>
-
-            <div className="space-y-4">
-              <h4 className="font-medium text-foreground">Delivery Options</h4>
-              <div className="space-y-3">
-                <div className="flex items-center justify-between">
-                  <span className="text-sm text-muted-foreground">Email Delivery</span>
-                  <Badge variant="outline" className="text-success border-success">Enabled</Badge>
-                </div>
-                
-                <div className="flex items-center justify-between">
-                  <span className="text-sm text-muted-foreground">Slack Integration</span>
-                  <Badge variant="outline" className="text-success border-success">Enabled</Badge>
-                </div>
-                
-                <div className="flex items-center justify-between">
-                  <span className="text-sm text-muted-foreground">Teams Integration</span>
-                  <Badge variant="outline">Disabled</Badge>
-                </div>
-                
-                <div className="flex items-center justify-between">
-                  <span className="text-sm text-muted-foreground">Cloud Storage</span>
-                  <Badge variant="outline" className="text-success border-success">S3 Bucket</Badge>
-                </div>
-              </div>
-            </div>
-          </div>
-=======
               ))}
             </div>
           )}
->>>>>>> 565ff9b (Initial commit)
         </CardContent>
       </Card>
     </div>
