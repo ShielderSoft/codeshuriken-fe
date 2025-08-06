@@ -7,52 +7,32 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Checkbox } from "@/components/ui/checkbox";
-import { useState } from "react";
+import { useState, useMemo } from "react";
+import { useScanner } from "@/hooks/useScanner";
 
 export default function Reports() {
+  const { reports: scanReports, loading, error } = useScanner();
   const [activeFilters, setActiveFilters] = useState<string[]>([]);
   const [selectedFormat, setSelectedFormat] = useState<string>("");
   const [selectedType, setSelectedType] = useState<string>("");
   const [selectedStatus, setSelectedStatus] = useState<string>("");
 
-  const reports = [
-    {
-      id: "RPT_001",
-      name: "Weekly Security Summary",
-      type: "Scheduled",
-      format: "PDF",
-      lastGenerated: "2024-01-15 09:00",
-      nextRun: "2024-01-22 09:00",
-      status: "Active"
-    },
-    {
-      id: "RPT_002", 
-      name: "Critical Vulnerabilities Report",
-      type: "On-Demand",
-      format: "PDF",
-      lastGenerated: "2024-01-14 16:30",
-      nextRun: "-",
-      status: "Completed"
-    },
-    {
-      id: "RPT_003",
-      name: "SBOM Export - All Repositories",
-      type: "Scheduled",
-      format: "XLS",
-      lastGenerated: "2024-01-13 02:00",
-      nextRun: "2024-01-20 02:00",
-      status: "Active"
-    },
-    {
-      id: "RPT_004",
-      name: "Compliance Audit Report",
-      type: "On-Demand",
-      format: "PDF",
-      lastGenerated: "2024-01-10 14:15",
-      nextRun: "-",
-      status: "Completed"
-    }
-  ];
+  // Generate reports based on actual scan data
+  const reports = useMemo(() => {
+    return scanReports.map((report, index) => ({
+      id: `RPT_${String(index + 1).padStart(3, '0')}`,
+      name: `${report.scan_type.toUpperCase()} Scan Report - ${report.repo_url.split('/').pop()?.replace('.git', '') || 'Unknown'}`,
+      type: "Automated",
+      format: "JSON",
+      lastGenerated: new Date(report.created_at).toLocaleString(),
+      nextRun: report.status === 'completed' ? "On-Demand" : "In Progress",
+      status: report.status === 'completed' ? 'Completed' : 
+              report.status === 'failed' ? 'Failed' : 'In Progress',
+      scanType: report.scan_type,
+      vulnerabilities: report.vulnerabilities?.length || 0,
+      repository: report.repo_url
+    }));
+  }, [scanReports]);
 
   const getStatusColor = (status: string) => {
     switch (status) {
