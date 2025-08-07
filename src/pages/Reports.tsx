@@ -16,6 +16,11 @@ export default function Reports() {
   const [selectedFormat, setSelectedFormat] = useState<string>("");
   const [selectedType, setSelectedType] = useState<string>("");
   const [selectedStatus, setSelectedStatus] = useState<string>("");
+  const [isGenerateModalOpen, setIsGenerateModalOpen] = useState<boolean>(false);
+  const [selectedReportType, setSelectedReportType] = useState<string>("");
+  const [searchTerm, setSearchTerm] = useState<string>("");
+  const [selectedReportIds, setSelectedReportIds] = useState<string[]>([]);
+  const [selectedReportFormat, setSelectedReportFormat] = useState<string>("");
 
   // Generate reports based on actual scan data
   const reports = useMemo(() => {
@@ -60,6 +65,91 @@ export default function Reports() {
     setSelectedType("");
     setSelectedStatus("");
   };
+
+  const handleGenerateReport = (reportType: string) => {
+    setSelectedReportType(reportType);
+    setIsGenerateModalOpen(true);
+    // Initialize with all reports selected by default
+    setSelectedReportIds(reports.map(report => report.id));
+  };
+
+  const handleReportSelection = (reportId: string, checked: boolean) => {
+    if (checked) {
+      setSelectedReportIds(prev => [...prev, reportId]);
+    } else {
+      setSelectedReportIds(prev => prev.filter(id => id !== reportId));
+    }
+  };
+
+  const handleSelectAllReports = (checked: boolean) => {
+    if (checked) {
+      setSelectedReportIds(filteredModalReports.map(report => report.id));
+    } else {
+      setSelectedReportIds([]);
+    }
+  };
+
+  const handleGenerateReportSubmit = async () => {
+    try {
+      // Validate that we have selected reports and format
+      if (selectedReportIds.length === 0) {
+        alert('Please select at least one report to generate.');
+        return;
+      }
+      
+      if (!selectedReportFormat) {
+        alert('Please select an output format.');
+        return;
+      }
+
+      // Prepare the payload
+      const payload = {
+        reportType: selectedReportType,
+        reportIds: selectedReportIds,
+        format: selectedReportFormat,
+        timestamp: new Date().toISOString()
+      };
+
+      console.log('Sending generate report request:', payload);
+
+      // Make API call to backend
+      const response = await fetch('http://localhost:3000/api/reports/generate', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const result = await response.json();
+      console.log('Generate report response:', result);
+      
+      // Show success message
+      alert(`${selectedReportType} generation started successfully! Report will be available shortly.`);
+      
+      // Close modal and reset state
+      setIsGenerateModalOpen(false);
+      setSelectedReportType("");
+      setSearchTerm("");
+      setSelectedReportIds([]);
+      setSelectedReportFormat("");
+      
+    } catch (error) {
+      console.error('Error generating report:', error);
+      alert('Failed to generate report. Please try again.');
+    }
+  };
+
+  // Filter reports based on search term for the modal
+  const filteredModalReports = reports.filter(report => 
+    report.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    report.repository.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    report.scanType.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   const filteredReports = reports.filter(report => {
     if (activeFilters.length === 0) return true;
@@ -301,7 +391,7 @@ export default function Reports() {
             <FileText className="h-8 w-8 text-muted-foreground mx-auto mb-3" />
             <h3 className="font-semibold text-foreground mb-2">Security Summary</h3>
             <p className="text-sm text-muted-foreground mb-4">Generate immediate security overview</p>
-            <Button size="sm" className="w-full">Generate Now</Button>
+            <Button size="sm" className="w-full" onClick={() => handleGenerateReport('Security Summary')}>Generate Now</Button>
           </CardContent>
         </Card>
         
@@ -310,7 +400,7 @@ export default function Reports() {
             <Download className="h-8 w-8 text-muted-foreground mx-auto mb-3" />
             <h3 className="font-semibold text-foreground mb-2">SBOM Export</h3>
             <p className="text-sm text-muted-foreground mb-4">Export software bill of materials</p>
-            <Button size="sm" variant="outline" className="w-full">Export SBOM</Button>
+            <Button size="sm" variant="outline" className="w-full" onClick={() => handleGenerateReport('SBOM Export')}>Export SBOM</Button>
           </CardContent>
         </Card>
         
@@ -319,7 +409,7 @@ export default function Reports() {
             <Calendar className="h-8 w-8 text-muted-foreground mx-auto mb-3" />
             <h3 className="font-semibold text-foreground mb-2">Compliance Report</h3>
             <p className="text-sm text-muted-foreground mb-4">Generate compliance audit report</p>
-            <Button size="sm" variant="outline" className="w-full">Generate Report</Button>
+            <Button size="sm" variant="outline" className="w-full" onClick={() => handleGenerateReport('Compliance Report')}>Generate Report</Button>
           </CardContent>
         </Card>
       </div>
@@ -388,6 +478,129 @@ export default function Reports() {
           )}
         </CardContent>
       </Card>
+
+      {/* Generate Report Modal */}
+      <Dialog open={isGenerateModalOpen} onOpenChange={setIsGenerateModalOpen}>
+        <DialogContent className="max-w-2xl max-h-[80vh]">
+          <DialogHeader>
+            <DialogTitle>Generate {selectedReportType}</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="report-format">Output Format</Label>
+              <Select value={selectedReportFormat} onValueChange={setSelectedReportFormat}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Select format" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="pdf">PDF</SelectItem>
+                  <SelectItem value="xlsx">Excel (XLSX)</SelectItem>
+                  <SelectItem value="csv">CSV</SelectItem>
+                  <SelectItem value="json">JSON</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            
+            <div className="space-y-2">
+              <Label htmlFor="search-reports">Search Available Reports</Label>
+              <Input
+                id="search-reports"
+                placeholder="Search by report name, repository, or scan type..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="w-full"
+              />
+            </div>
+            
+            <div className="space-y-2">
+              <Label>Available Reports</Label>
+              <div className="border border-border rounded-md max-h-64 overflow-y-auto">
+                <div className="grid grid-cols-12 gap-2 p-3 border-b border-border bg-muted/50 text-sm font-medium">
+                  <div className="col-span-1">
+                    <Checkbox 
+                      id="select-all"
+                      checked={selectedReportIds.length === filteredModalReports.length && filteredModalReports.length > 0}
+                      onCheckedChange={handleSelectAllReports}
+                    />
+                  </div>
+                  <div className="col-span-5">Report Name</div>
+                  <div className="col-span-2">Type</div>
+                  <div className="col-span-2">Status</div>
+                  <div className="col-span-2">Vulnerabilities</div>
+                </div>
+                
+                {filteredModalReports.length === 0 ? (
+                  <div className="p-4 text-center text-muted-foreground">
+                    {searchTerm ? 'No reports match your search.' : 'No reports available.'}
+                  </div>
+                ) : (
+                  filteredModalReports.map((report) => (
+                    <div key={report.id} className="grid grid-cols-12 gap-2 p-3 border-b border-border last:border-b-0 hover:bg-muted/30 text-sm">
+                      <div className="col-span-1">
+                        <Checkbox 
+                          id={`modal-report-${report.id}`} 
+                          checked={selectedReportIds.includes(report.id)}
+                          onCheckedChange={(checked) => handleReportSelection(report.id, checked as boolean)}
+                        />
+                      </div>
+                      <div className="col-span-5">
+                        <div className="font-medium text-foreground truncate" title={report.name}>
+                          {report.name}
+                        </div>
+                        <div className="text-xs text-muted-foreground truncate">
+                          {report.repository.split('/').pop()?.replace('.git', '')}
+                        </div>
+                      </div>
+                      <div className="col-span-2">
+                        <Badge variant="outline" className="text-xs">
+                          {report.scanType}
+                        </Badge>
+                      </div>
+                      <div className="col-span-2">
+                        <Badge 
+                          variant="outline" 
+                          className={`text-xs text-${getStatusColor(report.status)} border-${getStatusColor(report.status)}`}
+                        >
+                          {report.status}
+                        </Badge>
+                      </div>
+                      <div className="col-span-2 text-center">
+                        <span className="font-medium">{report.vulnerabilities}</span>
+                      </div>
+                    </div>
+                  ))
+                )}
+              </div>
+            </div>
+            
+            <div className="space-y-2">
+              <Label htmlFor="email-recipients">Email Recipients (Optional)</Label>
+              <Input 
+                id="email-recipients" 
+                placeholder="Enter email addresses separated by commas" 
+                type="email"
+              />
+            </div>
+            
+            <div className="flex space-x-3 pt-4">
+              <Button 
+                variant="outline" 
+                className="flex-1"
+                onClick={() => setIsGenerateModalOpen(false)}
+              >
+                Cancel
+              </Button>
+              <Button 
+                className="flex-1"
+                onClick={handleGenerateReportSubmit}
+                disabled={selectedReportIds.length === 0 || !selectedReportFormat}
+              >
+                Generate Report ({selectedReportIds.length} selected)
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
