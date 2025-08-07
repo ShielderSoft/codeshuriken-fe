@@ -8,8 +8,10 @@ import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
-import { MessageCircle, Users, Mail, MessageSquare, Send, Github, GitBranch, Bug, Settings, Check, AlertCircle, Clock, Shield } from "lucide-react";
-import { useState } from "react";
+import { MessageCircle, Users, Mail, MessageSquare, Send, Github, GitBranch, Bug, Settings, Check, AlertCircle, Clock, Shield, Loader2, TestTube, Activity } from "lucide-react";
+import { useState, useEffect } from "react";
+import { IntegrationService } from "@/services/integrationService";
+import { toast } from "@/hooks/use-toast";
 
 export default function Integrations() {
   const [selectedTool, setSelectedTool] = useState<any>(null);
@@ -18,14 +20,117 @@ export default function Integrations() {
   const [weeklyReportStatus, setWeeklyReportStatus] = useState("enabled");
   const [monthlyReportStatus, setMonthlyReportStatus] = useState("enabled");
   const [scanAlertsStatus, setScanAlertsStatus] = useState("disabled");
+  const [serviceHealth, setServiceHealth] = useState<any>(null);
+  const [discordBotStatus, setDiscordBotStatus] = useState<any>(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isTestingConnection, setIsTestingConnection] = useState(false);
+  
+  // Form data for connections
+  const [telegramChatId, setTelegramChatId] = useState("1587024489"); // Default from API docs
+  const [discordUserId, setDiscordUserId] = useState("1392614645944291510"); // Default from API docs
 
   const communicationTools = [
     { name: "Slack", icon: MessageCircle, connected: true, description: "Team messaging and notifications" },
     { name: "Microsoft Teams", icon: Users, connected: false, description: "Video calls and collaboration" },
     { name: "Outlook", icon: Mail, connected: true, description: "Email notifications and reports" },
-    { name: "Discord", icon: MessageSquare, connected: false, description: "Community chat platform" },
-    { name: "Telegram", icon: Send, connected: false, description: "Instant messaging service" }
+    { name: "Discord", icon: MessageSquare, connected: discordBotStatus?.connected || false, description: "Community chat platform", apiEnabled: true },
+    { name: "Telegram", icon: Send, connected: false, description: "Instant messaging service", apiEnabled: true }
   ];
+
+  // Check service health and Discord bot status on component mount
+  useEffect(() => {
+    checkServiceStatus();
+  }, []);
+
+  const checkServiceStatus = async () => {
+    try {
+      setIsLoading(true);
+      
+      // Check service health
+      const healthResponse = await IntegrationService.checkHealth();
+      if (healthResponse.success) {
+        setServiceHealth(healthResponse.data);
+        toast({
+          title: "Service Connected",
+          description: "Integration service is running and healthy",
+        });
+      }
+
+      // Check Discord bot status
+      const discordResponse = await IntegrationService.getDiscordBotStatus();
+      if (discordResponse.success) {
+        setDiscordBotStatus(discordResponse.data);
+      }
+    } catch (error) {
+      console.error('Failed to check service status:', error);
+      toast({
+        title: "Service Unavailable",
+        description: "Could not connect to integration service. Make sure it's running on localhost:3000",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const testConnection = async (toolName: string) => {
+    setIsTestingConnection(true);
+    try {
+      let success = false;
+      
+      if (toolName === "Telegram") {
+        success = await IntegrationService.testTelegramConnection(telegramChatId);
+      } else if (toolName === "Discord") {
+        success = await IntegrationService.testDiscordConnection(discordUserId);
+      }
+
+      if (success) {
+        toast({
+          title: "Connection Successful",
+          description: `Test message sent to ${toolName} successfully!`,
+        });
+      } else {
+        toast({
+          title: "Connection Failed",
+          description: `Failed to send test message to ${toolName}`,
+          variant: "destructive",
+        });
+      }
+    } catch (error) {
+      console.error(`${toolName} connection test failed:`, error);
+      toast({
+        title: "Connection Error",
+        description: `Error testing ${toolName} connection`,
+        variant: "destructive",
+      });
+    } finally {
+      setIsTestingConnection(false);
+    }
+  };
+
+  const runQuickTestSuite = async () => {
+    setIsLoading(true);
+    try {
+      const results = await IntegrationService.runQuickTestSuite();
+      
+      let message = "Test Results:\n";
+      message += `✅ Service Health: ${results.health ? "OK" : "Failed"}\n`;
+      message += `✅ Discord Bot: ${results.discordBot ? "Connected" : "Failed"}`;
+      
+      toast({
+        title: "Quick Test Complete",
+        description: message,
+      });
+    } catch (error) {
+      toast({
+        title: "Test Suite Failed",
+        description: "Could not complete the test suite",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const developmentTools = [
     { name: "GitHub", icon: Github, connected: true, description: "Source code repository management" },
@@ -241,86 +346,146 @@ export default function Integrations() {
         </DialogHeader>
         
         <div className="space-y-6">
-          {/* Connection Steps */}
-          <div className="space-y-4">
-            {selectedTool?.name === "Slack" && (
-              <div className="space-y-3">
-                <div>
-                  <Label htmlFor="workspace">Workspace URL</Label>
-                  <Input 
-                    id="workspace" 
-                    placeholder="your-workspace.slack.com" 
-                  />
+          {/* API-enabled tools show different content */}
+          {selectedTool?.apiEnabled ? (
+            <div className="space-y-4">
+              {selectedTool?.name === "Telegram" && (
+                <div className="space-y-3">
+                  <div>
+                    <Label htmlFor="chat-id">Chat ID</Label>
+                    <Input 
+                      id="chat-id" 
+                      value={telegramChatId}
+                      onChange={(e) => setTelegramChatId(e.target.value)}
+                      placeholder="Your Telegram chat ID" 
+                    />
+                    <p className="text-xs text-muted-foreground mt-1">
+                      Get your chat ID by messaging @userinfobot on Telegram
+                    </p>
+                  </div>
+                  <div className="p-4 bg-muted rounded-lg">
+                    <h5 className="font-medium text-sm mb-2">Quick Setup:</h5>
+                    <ol className="text-xs text-muted-foreground space-y-1">
+                      <li>1. Start a chat with the bot</li>
+                      <li>2. Get your chat ID from @userinfobot</li>
+                      <li>3. Enter the chat ID above</li>
+                      <li>4. Test the connection</li>
+                    </ol>
+                  </div>
                 </div>
-                <div>
-                  <Label htmlFor="bot-token">Bot Token</Label>
-                  <Input 
-                    id="bot-token" 
-                    type="password" 
-                    placeholder="xoxb-your-bot-token" 
-                  />
+              )}
+              
+              {selectedTool?.name === "Discord" && (
+                <div className="space-y-3">
+                  <div>
+                    <Label htmlFor="user-id">User ID</Label>
+                    <Input 
+                      id="user-id" 
+                      value={discordUserId}
+                      onChange={(e) => setDiscordUserId(e.target.value)}
+                      placeholder="Your Discord user ID" 
+                    />
+                    <p className="text-xs text-muted-foreground mt-1">
+                      Enable Developer Mode in Discord settings to copy your user ID
+                    </p>
+                  </div>
+                  {discordBotStatus && (
+                    <div className="p-3 bg-green-50 border border-green-200 rounded-lg">
+                      <div className="flex items-center gap-2">
+                        <Check className="h-4 w-4 text-green-600" />
+                        <span className="text-sm font-medium text-green-900">Bot Status: Connected</span>
+                      </div>
+                      <p className="text-xs text-green-700 mt-1">
+                        Bot: {discordBotStatus.bot?.username}#{discordBotStatus.bot?.discriminator}
+                      </p>
+                    </div>
+                  )}
+                  <div className="p-4 bg-muted rounded-lg">
+                    <h5 className="font-medium text-sm mb-2">Quick Setup:</h5>
+                    <ol className="text-xs text-muted-foreground space-y-1">
+                      <li>1. Enable Developer Mode in Discord</li>
+                      <li>2. Right-click your username and "Copy ID"</li>
+                      <li>3. Enter your user ID above</li>
+                      <li>4. Test the connection</li>
+                    </ol>
+                  </div>
                 </div>
+              )}
+
+              {/* Test Connection Button */}
+              <Button 
+                onClick={() => testConnection(selectedTool?.name)}
+                disabled={isTestingConnection}
+                className="w-full"
+                variant="outline"
+              >
+                {isTestingConnection ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Testing Connection...
+                  </>
+                ) : (
+                  <>
+                    <TestTube className="mr-2 h-4 w-4" />
+                    Test Connection
+                  </>
+                )}
+              </Button>
+            </div>
+          ) : (
+            /* Original connection form for non-API tools */
+            <div className="space-y-4">
+              {selectedTool?.name === "Slack" && (
+                <div className="space-y-3">
+                  <div>
+                    <Label htmlFor="workspace">Workspace URL</Label>
+                    <Input 
+                      id="workspace" 
+                      placeholder="your-workspace.slack.com" 
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="bot-token">Bot Token</Label>
+                    <Input 
+                      id="bot-token" 
+                      type="password" 
+                      placeholder="xoxb-your-bot-token" 
+                    />
+                  </div>
+                </div>
+              )}
+              
+              {selectedTool?.name === "Microsoft Teams" && (
+                <div className="space-y-3">
+                  <div>
+                    <Label htmlFor="tenant">Tenant ID</Label>
+                    <Input 
+                      id="tenant" 
+                      placeholder="your-tenant-id" 
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="webhook">Webhook URL</Label>
+                    <Input 
+                      id="webhook" 
+                      placeholder="https://outlook.office.com/webhook/..." 
+                    />
+                  </div>
+                </div>
+              )}
+
+              {/* Setup Guide for non-API tools */}
+              <div className="p-4 bg-muted rounded-lg">
+                <h5 className="font-medium text-sm mb-2">Setup Instructions:</h5>
+                <ol className="text-xs text-muted-foreground space-y-1">
+                  <li>1. Create a {selectedTool?.name} bot/application</li>
+                  <li>2. Copy the required credentials</li>
+                  <li>3. Test the connection</li>
+                  <li>4. Configure notification preferences</li>
+                </ol>
               </div>
-            )}
-            
-            {selectedTool?.name === "Microsoft Teams" && (
-              <div className="space-y-3">
-                <div>
-                  <Label htmlFor="tenant">Tenant ID</Label>
-                  <Input 
-                    id="tenant" 
-                    placeholder="your-tenant-id" 
-                  />
-                </div>
-                <div>
-                  <Label htmlFor="webhook">Webhook URL</Label>
-                  <Input 
-                    id="webhook" 
-                    placeholder="https://outlook.office.com/webhook/..." 
-                  />
-                </div>
-              </div>
-            )}
-            
-            {selectedTool?.name === "Discord" && (
-              <div className="space-y-3">
-                <div>
-                  <Label htmlFor="server">Server ID</Label>
-                  <Input 
-                    id="server" 
-                    placeholder="Your Discord server ID" 
-                  />
-                </div>
-                <div>
-                  <Label htmlFor="webhook-url">Webhook URL</Label>
-                  <Input 
-                    id="webhook-url" 
-                    placeholder="https://discord.com/api/webhooks/..." 
-                  />
-                </div>
-              </div>
-            )}
-            
-            {selectedTool?.name === "Telegram" && (
-              <div className="space-y-3">
-                <div>
-                  <Label htmlFor="bot-token">Bot Token</Label>
-                  <Input 
-                    id="bot-token" 
-                    type="password" 
-                    placeholder="Your Telegram bot token" 
-                  />
-                </div>
-                <div>
-                  <Label htmlFor="chat-id">Chat ID</Label>
-                  <Input 
-                    id="chat-id" 
-                    placeholder="Your chat ID" 
-                  />
-                </div>
-              </div>
-            )}
-          </div>
+            </div>
+          )}
 
           {/* Initial Settings */}
           <div className="space-y-4">
@@ -336,17 +501,6 @@ export default function Integrations() {
               </div>
             </div>
           </div>
-
-          {/* Setup Guide */}
-          <div className="p-4 bg-muted rounded-lg">
-            <h5 className="font-medium text-sm mb-2">Setup Instructions:</h5>
-            <ol className="text-xs text-muted-foreground space-y-1">
-              <li>1. Create a {selectedTool?.name} bot/application</li>
-              <li>2. Copy the required credentials</li>
-              <li>3. Test the connection</li>
-              <li>4. Configure notification preferences</li>
-            </ol>
-          </div>
         </div>
 
         <div className="flex justify-end gap-3 mt-6">
@@ -354,7 +508,7 @@ export default function Integrations() {
             Cancel
           </Button>
           <Button onClick={() => setIsConnectModalOpen(false)}>
-            Connect & Test
+            {selectedTool?.apiEnabled ? "Save Configuration" : "Connect & Test"}
           </Button>
         </div>
       </DialogContent>
@@ -368,6 +522,61 @@ export default function Integrations() {
         <h1 className="text-3xl font-bold text-foreground">Integrations</h1>
         <p className="text-muted-foreground">Connect your tools and services to CodeShuriken</p>
       </div>
+
+      {/* Service Status Card */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-lg font-semibold text-foreground flex items-center gap-2">
+            <Activity className="h-5 w-5" />
+            Integration Service Status
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-4">
+              <div className={`p-2 rounded-full ${serviceHealth ? 'bg-green-100' : 'bg-red-100'}`}>
+                <div className={`w-3 h-3 rounded-full ${serviceHealth ? 'bg-green-500' : 'bg-red-500'}`} />
+              </div>
+              <div>
+                <p className="font-medium">
+                  {serviceHealth ? 'Service Online' : 'Service Offline'}
+                </p>
+                <p className="text-sm text-muted-foreground">
+                  {serviceHealth ? serviceHealth.service : 'Integration service is not responding'}
+                </p>
+              </div>
+            </div>
+            <div className="flex gap-2">
+              <Button 
+                variant="outline" 
+                size="sm" 
+                onClick={checkServiceStatus}
+                disabled={isLoading}
+              >
+                {isLoading ? (
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                ) : (
+                  "Refresh Status"
+                )}
+              </Button>
+              <Button 
+                variant="outline" 
+                size="sm" 
+                onClick={runQuickTestSuite}
+                disabled={isLoading || !serviceHealth}
+              >
+                <TestTube className="h-4 w-4 mr-2" />
+                Quick Test
+              </Button>
+            </div>
+          </div>
+          {serviceHealth && (
+            <div className="mt-4 text-xs text-muted-foreground">
+              Last checked: {new Date(serviceHealth.timestamp).toLocaleString()}
+            </div>
+          )}
+        </CardContent>
+      </Card>
 
       {/* Single Card with Tabs */}
       <Card>

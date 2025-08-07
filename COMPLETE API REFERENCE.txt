@@ -1,0 +1,54 @@
+COMPLETE API REFERENCE
+
+1. SERVICE HEALTH
+
+curl.exe http://localhost:3000/api/health
+
+output : {"status":"OK","timestamp":"2025-07-25T06:21:17.350Z","service":"Telegram & Discord Integration Service"}
+
+2. TELEGRAM APIs
+
+Send Message:
+curl.exe -X POST http://localhost:3000/api/send-message -H "Content-Type: application/json" -d "{\"receiver\":\"1587024489\",\"message\":\"Your message here\"}"
+
+output : {"success":true,"message":"Message sent successfully","data":{"chatId":"1587024489","messageId":21,"timestamp":"2025-07-25T06:34:48.604Z"}}
+
+Using File:
+curl.exe -X POST http://localhost:3000/api/send-message -H "Content-Type: application/json" -d "@telegram-message.json"
+
+output : {"success":true,"message":"Message sent successfully","data":{"chatId":"1587024489","messageId":23,"timestamp":"2025-07-25T06:46:42.295Z"}}
+
+Get Message History:
+curl.exe http://localhost:3000/api/messages/1587024489
+
+output : {"success":true,"data":{"chatId":"1587024489","messages":[{"id":18,"chat_id":"1587024489","message_text":"🧪 This is a test message from the Telegram Integration Service!","status":"sent","telegram_message_id":24,"error_message":null,"sent_at":"2025-07-25T06:51:34.306Z","created_at":"2025-07-25T06:51:34.308Z"},{"id":17,"chat_id":"1587024489","message_text":"Your message here","status":"sent","telegram_message_id":23,"error_message":null,"sent_at":"2025-07-25T06:46:42.281Z","created_at":"2025-07-25T06:46:42.282Z"},{"id":16,"chat_id":"1587024489","message_text":"Your message here","status":"sent","telegram_message_id":22,"error_message":null,"sent_at":"2025-07-25T06:45:50.430Z","created_at":"2025-07-25T06:45:50.431Z"},{"id":15,"chat_id":"1587024489","message_text":"Your message here","status":"sent","telegram_message_id":21,"error_message":null,"sent_at":"2025-07-25T06:34:48.563Z","created_at":"2025-07-25T06:34:48.567Z"},{"id":14,"chat_id":"1587024489","message_text":"from integration service","status":"sent","telegram_message_id":20,"error_message":null,"sent_at":"2025-07-24T11:32:29.638Z","created_at":"2025-07-24T11:32:29.641Z"},{"id":13,"chat_id":"1587024489","message_text":"from integration service","status":"sent","telegram_message_id":19,"error_message":null,"sent_at":"2025-07-23T12:26:46.369Z","created_at":"2025-07-23T12:26:46.371Z"},{"id":12,"chat_id":"1587024489","message_text":"from integration service","status":"sent","telegram_message_id":18,"error_message":null,"sent_at":"2025-07-23T12:22:42.706Z","created_at":"2025-07-23T12:22:42.709Z"},{"id":11,"chat_id":"1587024489","message_text":"from integration service","status":"sent","telegram_message_id":17,"error_message":null,"sent_at":"2025-07-23T12:09:28.480Z","created_at":"2025-07-23T12:09:28.481Z"},{"id":10,"chat_id":"1587024489","message_text":"this is from integration service","status":"sent","telegram_message_id":16,"error_message":null,"sent_at":"2025-07-23T11:22:27.215Z","created_at":"2025-07-23T11:22:27.217Z"},{"id":9,"chat_id":"1587024489","message_text":"Hello! Testing message sending functionality via curl. PostgreSQL is storing this message! ✅","status":"sent","telegram_message_id":15,"error_message":null,"sent_at":"2025-07-23T10:28:11.674Z","created_at":"2025-07-23T10:28:11.679Z"},{"id":8,"chat_id":"1587024489","message_text":"Hello from curl! Test message","status":"sent","telegram_message_id":14,"error_message":null,"sent_at":"2025-07-23T10:18:10.877Z","created_at":"2025-07-23T10:18:10.885Z"},{"id":7,"chat_id":"1587024489","message_text":"Hello from curl! This is a test message via Telegram API 📱✅","status":"sent","telegram_message_id":13,"error_message":null,"sent_at":"2025-07-23T10:16:07.620Z","created_at":"2025-07-23T10:16:07.622Z"},{"id":6,"chat_id":"1587024489","message_text":"Hello from PowerShell curl! This is a test message via Telegram API ","status":"sent","telegram_message_id":12,"error_message":null,"sent_at":"2025-07-23T10:15:58.910Z","created_at":"2025-07-23T10:15:58.911Z"},{"id":5,"chat_id":"1587024489","message_text":"Hello from curl! This is a test message via Telegram API 📱✅","status":"sent","telegram_message_id":11,"error_message":null,"sent_at":"2025-07-23T10:15:47.619Z","created_at":"2025-07-23T10:15:47.621Z"},{"id":4,"chat_id":"1587024489","message_text":"Testing Telegram endpoint - this is a test message from the integration service! o.","status":"sent","telegram_message_id":10,"error_message":null,"sent_at":"2025-07-23T10:08:22.231Z","created_at":"2025-07-23T10:08:22.232Z"},{"id":3,"chat_id":"1587024489","message_text":"Final test: this is a test message sent via curl-style command!","status":"sent","telegram_message_id":8,"error_message":null,"sent_at":"2025-07-22T08:02:27.725Z","created_at":"2025-07-22T08:02:27.727Z"},{"id":2,"chat_id":"1587024489","message_text":"Hello Ishika! Your Telegram Integration Service is working perfectly! Ys?o.\n\nThis message was sent via the API and logged to PostgreSQL database.","status":"sent","telegram_message_id":7,"error_message":null,"sent_at":"2025-07-22T08:02:12.602Z","created_at":"2025-07-22T08:02:12.603Z"},{"id":1,"chat_id":"1587024489","message_text":"this is a test message","status":"sent","telegram_message_id":6,"error_message":null,"sent_at":"2025-07-22T08:01:25.814Z","created_at":"2025-07-22T08:01:25.815Z"}],"count":18}}
+
+3. DISCORD APIs
+
+Send Message to Channel:
+curl.exe -X POST http://localhost:3000/api/discord/send-message -H "Content-Type: application/json" -d "{\"receiver\":\"1392614645944291510\",\"message\":\"Your message here\"}"
+
+output : {"success":true,"message":"Discord message sent successfully","data":{"userId":"1392614645944291510","messageId":"1398200609638711336","timestamp":"2025-07-25T07:10:01.224Z","demo":false}}
+
+Using File:
+curl.exe -X POST http://localhost:3000/api/discord/send-message -H "Content-Type: application/json" -d "@discord-message.json"
+
+output : {"success":true,"message":"Discord message sent successfully","data":{"userId":"1392614645944291510","messageId":"1398201729350242365","timestamp":"2025-07-25T07:14:28.159Z","demo":false}}
+
+Get Bot Status:
+curl.exe http://localhost:3000/api/discord/bot-status
+
+output : {"success":true,"data":{"connected":true,"bot":{"username":"mybotApp","id":"1397841021248737371","discriminator":"3218"}}}
+
+Get Message History:
+curl.exe http://localhost:3000/api/discord/messages/1392614645944291510
+
+output : {"success":true,"data":{"userId":"1392614645944291510","messages":[{"id":17,"user_id":"1392614645944291510","message_text":"from integration service","status":"sent","discord_message_id":"1398201729350242365","error_message":null,"sent_at":"2025-07-25T07:14:28.076Z","created_at":"2025-07-25T07:14:28.147Z"},{"id":16,"user_id":"1392614645944291510","message_text":"Your message here","status":"sent","discord_message_id":"1398200609638711336","error_message":null,"sent_at":"2025-07-25T07:10:01.124Z","created_at":"2025-07-25T07:10:01.184Z"},{"id":15,"user_id":"1392614645944291510","message_text":"from integration service","status":"sent","discord_message_id":"1398195075829469314","error_message":null,"sent_at":"2025-07-25T06:48:01.755Z","created_at":"2025-07-25T06:48:01.816Z"},{"id":14,"user_id":"1392614645944291510","message_text":"from integration service","status":"sent","discord_message_id":"1397906232878174229","error_message":null,"sent_at":"2025-07-24T11:40:16.681Z","created_at":"2025-07-24T11:40:16.684Z"},{"id":13,"user_id":"1392614645944291510","message_text":"from integration service","status":"failed","discord_message_id":null,"error_message":"Unknown User","sent_at":null,"created_at":"2025-07-24T11:35:21.157Z"},{"id":12,"user_id":"1392614645944291510","message_text":"from integration service","status":"failed","discord_message_id":null,"error_message":"Unknown User","sent_at":null,"created_at":"2025-07-24T11:32:30.195Z"}],"count":6}}
+
+4. QUICK TEST SUITE
+
+# Test everything at once
+curl.exe http://localhost:3000/api/health
+curl.exe http://localhost:3000/api/discord/bot-status
+curl.exe -X POST http://localhost:3000/api/send-message -H "Content-Type: application/json" -d "{\"receiver\":\"1587024489\",\"message\":\"Test from API\"}"
+curl.exe -X POST http://localhost:3000/api/discord/send-message -H "Content-Type: application/json" -d "{\"receiver\":\"1392614645944291510\",\"message\":\"Test from API\"}"
